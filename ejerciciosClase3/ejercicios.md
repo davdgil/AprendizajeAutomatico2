@@ -799,10 +799,17 @@ for nombre, (texto, esquema) in textos.items():
 #### Paso 4: Análisis (5 min)
 
 Responde:
-1. ¿En cuántos intentos logró generar JSON válido para cada texto?
-2. ¿Hubo campos con valor "No especificado"? ¿Era correcto?
-3. ¿Los valores numéricos fueron números o strings?
-4. ¿Qué pasaría si el texto de entrada estuviera en otro idioma?
+1. **¿En cuántos intentos logró generar JSON válido para cada texto?
+** Los tres textos generaron JSON válido en el primer intento. El system prompt con instrucciones claras ("SOLO con el JSON, sin texto adicional") y temperature=0 fueron clave para obtener JSON limpio a la primera.
+
+2. **¿Hubo campos con valor "No especificado"? ¿Era correcto?
+** Sí, el campo "empresa" en la oferta de empleo apareció como "No especificado" ya que el texto no menciona explícitamente el nombre de la empresa (aunque el dominio del email sugiere "TechCorp"). Es una respuesta válida porque el modelo siguió la regla de usar "No especificado" cuando la información no está explícita.
+
+3. **¿Los valores numéricos fueron números o strings?
+** Los valores numéricos fueron correctamente extraídos como números (45000, 55000, 7, 10, 1299, 30, 2021), no como strings. La instrucción "Los valores numéricos deben ser números, no strings" en el system prompt fue efectiva.
+
+4. **¿Qué pasaría si el texto de entrada estuviera en otro idioma?
+** Los LLMs multilingües como GLM 4.5 pueden extraer datos de textos en cualquier idioma, ya que el esquema JSON actúa como "ancla" estructural independiente del idioma. Sin embargo, la precisión podría bajar con idiomas menos representados en el entrenamiento. Se podría añadir una instrucción al prompt indicando el idioma del texto de entrada.
 
 ---
 
@@ -943,17 +950,24 @@ Completa la siguiente tabla:
 
 | Aspecto | API Nativa (Ej. 4) | LangChain (Ej. 5) |
 |---------|--------------------|--------------------|
-| Líneas de código (aprox.) | | |
-| Facilidad de lectura | | |
-| Gestión de reintentos | | |
-| Cambiar de modelo | | |
-| Curva de aprendizaje | | |
+| Líneas de código (aprox.) | ~90 líneas (extract_json + esquemas + bucle) | ~40 líneas (chain + bucle) |
+| Facilidad de lectura | Media - lógica explícita, más verbosa | Alta - patrón pipe declarativo |
+| Gestión de reintentos | Manual (bucle for + try/except) | No incluida por defecto, requiere RunnableWithRetry |
+| Cambiar de modelo | Cambiar 1 variable (MODEL) | Cambiar 1 parámetro en ChatOpenAI() |
+| Curva de aprendizaje | Baja - solo openai SDK | Media - hay que aprender abstracciones de LangChain |
 
 ### Preguntas de Reflexión
-1. ¿Cuántas líneas de código te ahorraste con LangChain?
-2. ¿Qué beneficios ves en el patrón `prompt | model | parser`?
-3. ¿En qué situaciones NO usarías LangChain y preferirías la API nativa?
-4. ¿Cómo cambiarías la chain para usar Claude en vez de OpenAI?
+1. **¿Cuántas líneas de código te ahorraste con LangChain?
+** Aproximadamente 50 líneas. La función `extract_json` con reintentos y manejo de errores (~55 líneas) se reduce a una sola línea: `chain = prompt | model | output_parser`. El bucle de procesamiento también se simplifica al no necesitar lógica de limpieza de markdown ni reintentos manuales.
+
+2. **¿Qué beneficios ves en el patrón `prompt | model | parser`?
+** Separación clara de responsabilidades: cada componente hace una cosa. Es composable (puedes intercambiar partes fácilmente), legible (se lee como un pipeline de datos) y testeable (puedes probar cada componente por separado). También facilita agregar pasos intermedios como logging o validación.
+
+3. **¿En qué situaciones NO usarías LangChain y preferirías la API nativa?
+** Cuando necesitas control fino sobre reintentos, manejo de errores específicos (como rate limits), streaming personalizado, o cuando el overhead de las abstracciones no se justifica (scripts simples de una sola llamada). También en producción donde quieres minimizar dependencias y tener máximo control del comportamiento.
+
+4. **¿Cómo cambiarías la chain para usar Claude en vez de OpenAI?
+** Instalar `langchain-anthropic`, importar `ChatAnthropic` y reemplazar la línea del modelo: `model = ChatAnthropic(model="claude-3-5-haiku-latest", temperature=0)`. El resto de la chain (`prompt | model | output_parser`) queda exactamente igual, ya que LangChain abstrae las diferencias entre proveedores.
 
 ---
 
