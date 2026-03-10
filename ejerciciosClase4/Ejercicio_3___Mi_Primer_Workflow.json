@@ -1,0 +1,207 @@
+{
+  "name": "Ejercicio 3 - Mi Primer Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "89128609-5c69-4c79-acde-1bf7ec43a6ea",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1812adc3-494e-471e-8d27-2557afc99b71",
+              "name": "nombre",
+              "value": "Maria Garcia",
+              "type": "string"
+            },
+            {
+              "id": "71e16d84-139f-427b-98db-dca32648737e",
+              "name": "edad",
+              "value": 28,
+              "type": "number"
+            },
+            {
+              "id": "7220f013-777d-41c7-96ed-155d7304ec4f",
+              "name": "curso",
+              "value": "Aprendizaje Automatico II",
+              "type": "string"
+            },
+            {
+              "id": "64eb6587-426d-41ce-8c2e-834012edc7f0",
+              "name": "nota final",
+              "value": 3.5,
+              "type": "number"
+            },
+            {
+              "id": "645a5b67-3853-4d57-97a8-e1594de698d9",
+              "name": "asistencia_porcentaje",
+              "value": 85,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "id": "644c2135-1ab6-4458-9606-049af43467fb",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "739725d5-2e4e-4026-ae1c-7038f98074c7",
+              "leftValue": "={{ $json['nota final'] }}",
+              "rightValue": 5,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "ca16aa70-48b1-42ed-9d73-d9c84b97b136",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "509d47b0-03be-4d4f-b483-bb8870d10a51",
+              "name": "resultado",
+              "value": "Aprobado",
+              "type": "string"
+            },
+            {
+              "id": "4572c16f-57a2-4ccb-a3a1-89fe38dff7d8",
+              "name": "mensaje",
+              "value": "=Enhorabuena,{{ $('Edit Fields').item.json.nombre }} . Has aprobado con un {{ $('Edit Fields').item.json['nota final'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        -100
+      ],
+      "id": "c080a726-8df8-43b7-99f9-0698e94974dc",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cd04fc32-6c70-4eeb-ac0e-c7261c463034",
+              "name": "resultado",
+              "value": "Suspenso",
+              "type": "string"
+            },
+            {
+              "id": "270e6641-223f-48cf-909a-5e19e842a858",
+              "name": "mensaje",
+              "value": "=Lo sentimos,{{ $('Edit Fields').item.json.nombre }} . No has alcanzado la nota mínima.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        100
+      ],
+      "id": "75368acf-01ba-41ab-87db-d0bfb73d520d",
+      "name": "Edit Fields2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "de2d3384-4841-4e71-baaf-d78ea45ecade",
+  "meta": {
+    "instanceId": "7b706709984245b7cc1c888c6df0b2f082733db9e76fbc67e2a9df66abdcff02"
+  },
+  "id": "ujC8YUxaJevOVFGB",
+  "tags": []
+}
