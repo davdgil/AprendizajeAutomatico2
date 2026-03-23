@@ -1,0 +1,158 @@
+{
+  "name": "Asistente Personal - Caso 3",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Rol\nEres un asistente personal inteligente.\n\n# Tareas\n- Responder a: {{ $json.chatInput }}\n- Responder preguntas generales usando Wikipedia\n- Resolver cálculos matemáticos\n- Combinar ambas capacidades cuando sea necesario\n\n# Restricciones\n- Usar Wikipedia para datos factuales\n- Usar Calculator para operaciones matemáticas\n- Siempre citar fuentes cuando uses Wikipedia\n\n# Formato\n- Respuestas claras y estructuradas\n- Usa ejemplos cuando sea útil",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        280,
+        0
+      ],
+      "id": "dc2bcdf9-b32c-4eee-ba81-9a873f715154",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        340,
+        160
+      ],
+      "id": "e489054e-5936-434c-95f7-5f6d4819f50f",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        540,
+        160
+      ],
+      "id": "54a4ebc9-8b1e-404c-a880-0db332155b47",
+      "name": "Wikipedia"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        440,
+        160
+      ],
+      "id": "47fcbec5-a1a2-438c-af1e-07517b221c95",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        240,
+        160
+      ],
+      "id": "1d708aa9-b63c-4686-b37b-7c035b691fca",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "uCCngizQDFkU59qD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4cc6b135-9f9b-4c2a-85e1-dfd27b6805c7",
+      "name": "When chat message received",
+      "webhookId": "664e0cb2-f070-4295-b0c2-98549211aab2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "821499a9-9e4a-4788-adb5-5ef836d65c90",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7b706709984245b7cc1c888c6df0b2f082733db9e76fbc67e2a9df66abdcff02"
+  },
+  "id": "UCbYLF2Bc7v0stg5",
+  "tags": []
+}
