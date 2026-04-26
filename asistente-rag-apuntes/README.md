@@ -1,6 +1,6 @@
 # Asistente RAG de Apuntes
 
-Asistente académico que responde preguntas sobre documentos usando recuperación semántica y un modelo de lenguaje.
+Asistente académico que responde preguntas sobre documentos usando recuperación semántica, ChromaDB y la API de Google Gemini.
 
 ## Estructura
 
