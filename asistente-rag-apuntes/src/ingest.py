@@ -1,5 +1,9 @@
 import os
+import logging
 from pathlib import Path
+
+os.environ["ANONYMIZED_TELEMETRY"] = "FALSE"
+logging.getLogger("chromadb.telemetry.product.posthog").setLevel(logging.CRITICAL)
 
 import chromadb
 from chromadb.config import Settings
