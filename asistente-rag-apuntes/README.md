@@ -60,7 +60,7 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-5. Crear un archivo `.env` a partir de `.env.example` e introducir la clave de Google Gemini:
+5. Crear un archivo `.env` e introducir la clave de Google Gemini:
 
 ```env
 GOOGLE_API_KEY=tu_clave_aqui
@@ -116,7 +116,7 @@ El sistema indexa los documentos cargados y almacena sus chunks y embeddings en 
 
 Ejemplo de respuesta generada a partir del contexto recuperado desde los apuntes sobre RAG.
 
-![Consulta sobre RAG](docs/capturas/02-consulta-rag.png)
+![Consulta sobre RAG](docs/capturas/02-respuesta-rag.png)
 
 ### 3. Consulta sobre IA generativa
 
