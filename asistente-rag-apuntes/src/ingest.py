@@ -21,6 +21,7 @@ CHROMA_DIR = BASE_DIR / "chroma_db"
 COLLECTION_NAME = "apuntes"
 EMBEDDING_MODEL = "gemini-embedding-001"
 EMBEDDING_DIMENSIONALITY = 768
+EMBEDDING_BATCH_SIZE = 100
 
 
 def build_chunks(documents: list[dict[str, str]]) -> list[dict[str, str]]:
@@ -64,15 +65,21 @@ def get_collection():
 def embed_texts(
     client: genai.Client, texts: list[str], task_type: str
 ) -> list[list[float]]:
-    response = client.models.embed_content(
-        model=EMBEDDING_MODEL,
-        contents=texts,
-        config=types.EmbedContentConfig(
-            task_type=task_type,
-            output_dimensionality=EMBEDDING_DIMENSIONALITY,
-        ),
-    )
-    return [embedding.values for embedding in response.embeddings]
+    all_embeddings: list[list[float]] = []
+
+    for start in range(0, len(texts), EMBEDDING_BATCH_SIZE):
+        batch = texts[start : start + EMBEDDING_BATCH_SIZE]
+        response = client.models.embed_content(
+            model=EMBEDDING_MODEL,
+            contents=batch,
+            config=types.EmbedContentConfig(
+                task_type=task_type,
+                output_dimensionality=EMBEDDING_DIMENSIONALITY,
+            ),
+        )
+        all_embeddings.extend(embedding.values for embedding in response.embeddings)
+
+    return all_embeddings
 
 
 def ingest_documents() -> int:
