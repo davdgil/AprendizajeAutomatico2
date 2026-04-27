@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
-from prompts import build_rag_prompt
+from src.prompts import build_rag_prompt
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
