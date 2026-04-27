@@ -106,20 +106,28 @@ Una vez abierta la app:
 
 ## Capturas / Demo
 
-Pendiente de anadir capturas reales del proyecto en funcionamiento.
+### 1. Ingesta de documentos
 
-Capturas recomendadas:
+El sistema indexa los documentos cargados y almacena sus chunks y embeddings en ChromaDB.
 
-- Pantalla principal de Streamlit con una consulta escrita.
-- Respuesta generada por el sistema junto con las fuentes recuperadas.
-- Ejecucion correcta del script de ingesta mostrando los chunks almacenados.
+![Ingesta correcta](docs/capturas/01-ingesta-correcta.png)
 
-Las imagenes se guardaran en `docs/capturas/`.
+### 2. Consulta sobre RAG
+
+Ejemplo de respuesta generada a partir del contexto recuperado desde los apuntes sobre RAG.
+
+![Consulta sobre RAG](docs/capturas/02-consulta-rag.png)
+
+### 3. Consulta sobre IA generativa
+
+Ejemplo de consulta sobre un segundo documento indexado, mostrando que el sistema recupera informacion de distintas fuentes segun la pregunta.
+
+![Consulta sobre IA generativa](docs/capturas/03-consulta-ia-generativa.png)
 
 ## Decisiones tecnicas
 
 - **Uso de Gemini**: se eligio Google Gemini porque permite trabajar con la misma API tanto para embeddings como para generacion de respuestas.
-- **Uso de ChromaDB**: se eligio ChromaDB por su simplicidad de uso en local y por encajar muy bien en un proyecto academico de RAG.
+- **Uso de ChromaDB**: se eligio ChromaDB por su simplicidad de uso en local y por encajar muy bien en un proyecto de RAG.
 - **Separacion de fases**: la indexacion se separa de la consulta para no recalcular embeddings en cada pregunta.
 - **Prompt externo**: el prompt se movio a `src/prompts.py` para separar la logica del pipeline de la parte de prompt engineering.
 - **Chunking con overlap**: se usa solapamiento entre chunks para reducir perdida de contexto en los bordes de cada fragmento.
@@ -145,6 +153,6 @@ Dificultades encontradas:
 - Implementar reindexacion incremental para detectar cambios en documentos sin rehacer toda la base vectorial.
 - Anadir memoria conversacional para mantener el contexto entre varias preguntas consecutivas.
 
-## Autor(es)
 
-- [Anadir nombre y apellidos]
+
+- [David Gil]

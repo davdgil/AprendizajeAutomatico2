@@ -6,4 +6,3 @@ __pycache__/
 .streamlit/
 .DS_Store
 chroma_db/
-docs/capturas/
